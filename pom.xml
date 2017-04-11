@@ -9,7 +9,7 @@
   <groupId>com.edaware.examples</groupId>
   <artifactId>kalah</artifactId>
   <version>0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
 
   <name>Game of Kalah</name>
   <url>https://github.com/usaAmch/kalah-test</url>
