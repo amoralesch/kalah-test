@@ -7,8 +7,8 @@ public class Board {
   private static final Logger log = LoggerFactory.getLogger(Board.class);
 
   public enum Player {
-    PLAYER_ONE,
-    PLAYER_TWO
+    FIRST,
+    SECOND
   }
   
   private static final int DEFAULT_HOUSES = 6;
@@ -21,7 +21,7 @@ public class Board {
   
   private int[] board;
   
-  private Player current = Player.PLAYER_ONE;
+  private Player current = Player.FIRST;
   
   public Board() {
     this(DEFAULT_HOUSES);
@@ -115,8 +115,8 @@ public class Board {
   
   private void switchPlayer() {
     current = 
-        current == Player.PLAYER_ONE ? 
-            Player.PLAYER_TWO : Player.PLAYER_ONE;
+        current == Player.FIRST ? 
+            Player.SECOND : Player.FIRST;
   }
   
   /**
@@ -143,7 +143,7 @@ public class Board {
   }
   
   private int getOffsetForPlayer(Player player) {
-    if (player == Player.PLAYER_ONE)
+    if (player == Player.FIRST)
       return 0;
     
     // +1 = store for player one
