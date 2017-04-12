@@ -7,6 +7,8 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import com.edaware.examples.kalah.service.Board.Player;
+
 public class BoardTest {
   private static final int DEFAULT_HOUSES = 3;
   
@@ -61,27 +63,27 @@ public class BoardTest {
   @Test
   public void constructor_generateCorrectSetup_always() throws Exception {
     for (int i = 1; i <= DEFAULT_HOUSES; i++)
-      assertThat(board.getSeedCount(Board.PLAYER_ONE, i), equalTo(DEFAULT_SEEDS));
+      assertThat(board.getSeedCount(Player.PLAYER_ONE, i), equalTo(DEFAULT_SEEDS));
     
     for (int i = 1; i <= DEFAULT_HOUSES; i++)
-      assertThat(board.getSeedCount(Board.PLAYER_TWO, i), equalTo(DEFAULT_SEEDS));
+      assertThat(board.getSeedCount(Player.PLAYER_TWO, i), equalTo(DEFAULT_SEEDS));
 
-    assertThat(board.getStoreCount(Board.PLAYER_ONE), equalTo(0));
-    assertThat(board.getStoreCount(Board.PLAYER_TWO), equalTo(0));
+    assertThat(board.getStoreCount(Player.PLAYER_ONE), equalTo(0));
+    assertThat(board.getStoreCount(Player.PLAYER_TWO), equalTo(0));
   }
   
   @Test
   public void getSeedCount_throwsException_whenIndexIsWrong()
       throws Exception {
     try {
-      board.getSeedCount(Board.PLAYER_ONE, DEFAULT_HOUSES + 1);
+      board.getSeedCount(Player.PLAYER_ONE, DEFAULT_HOUSES + 1);
       fail("IllegalArgumentException expected");
     } catch (IllegalArgumentException ex) {
       // success
     }
 
     try {
-      board.getSeedCount(Board.PLAYER_TWO, DEFAULT_HOUSES + 1);
+      board.getSeedCount(Player.PLAYER_TWO, DEFAULT_HOUSES + 1);
       fail("IllegalArgumentException expected");
     } catch (IllegalArgumentException ex) {
       // success
@@ -90,57 +92,57 @@ public class BoardTest {
 
   @Test
   public void getNextPlayer_playerOne_whenStartingGame() throws Exception {
-    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
+    assertThat(board.getCurrentPlayer(), equalTo(Player.PLAYER_ONE));
   }
   
   @Test
   public void makeMove_ignoresMove_whenIsNotPlayerTurn() throws Exception {
-    board.makeMove(Board.PLAYER_TWO, 1);
+    board.makeMove(Player.PLAYER_TWO, 1);
 
-    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
-    assertThat(board.getSeedCount(Board.PLAYER_TWO, 1), greaterThan(0));
+    assertThat(board.getCurrentPlayer(), equalTo(Player.PLAYER_ONE));
+    assertThat(board.getSeedCount(Player.PLAYER_TWO, 1), greaterThan(0));
   }
 
   @Test
   public void makeMove_ignoresMove_whenSelectedHouseIsEmpty() throws Exception {
-    board.setSeedCount(Board.PLAYER_ONE, 1, 0);
+    board.setSeedCount(Player.PLAYER_ONE, 1, 0);
     
-    board.makeMove(Board.PLAYER_ONE, 1);
+    board.makeMove(Player.PLAYER_ONE, 1);
 
-    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
+    assertThat(board.getCurrentPlayer(), equalTo(Player.PLAYER_ONE));
   }
 
   @Test
   public void makeMove_emptiesSelectedHouse_always() throws Exception {
-    board.makeMove(Board.PLAYER_ONE, 1);
+    board.makeMove(Player.PLAYER_ONE, 1);
 
-    assertThat(board.getSeedCount(Board.PLAYER_ONE, 1), equalTo(0));
+    assertThat(board.getSeedCount(Player.PLAYER_ONE, 1), equalTo(0));
   }
   
   @Test
   public void makeMove_addsSeedsNextHouses_always() throws Exception {
-    board.makeMove(Board.PLAYER_ONE, 1);
+    board.makeMove(Player.PLAYER_ONE, 1);
 
-    assertThat(board.getSeedCount(Board.PLAYER_ONE, 1), equalTo(0));
-    assertThat(board.getSeedCount(Board.PLAYER_ONE, 2), equalTo(DEFAULT_SEEDS + 1));
-    assertThat(board.getSeedCount(Board.PLAYER_ONE, 3), equalTo(DEFAULT_SEEDS + 1));
+    assertThat(board.getSeedCount(Player.PLAYER_ONE, 1), equalTo(0));
+    assertThat(board.getSeedCount(Player.PLAYER_ONE, 2), equalTo(DEFAULT_SEEDS + 1));
+    assertThat(board.getSeedCount(Player.PLAYER_ONE, 3), equalTo(DEFAULT_SEEDS + 1));
   }
   
   @Test
   public void makeMove_switchesPlayers_whenValidMove() throws Exception {
-    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
+    assertThat(board.getCurrentPlayer(), equalTo(Player.PLAYER_ONE));
     
-    board.makeMove(Board.PLAYER_ONE, 1);
+    board.makeMove(Player.PLAYER_ONE, 1);
 
-    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_TWO));
+    assertThat(board.getCurrentPlayer(), equalTo(Player.PLAYER_TWO));
   }
   
   @Test
   public void isGameOver_false_whenStonesAreBothPlayersHouses()
       throws Exception {
     // some stones are still there
-    assertThat(board.getSeedCount(Board.PLAYER_ONE, 1), greaterThan(0));
-    assertThat(board.getSeedCount(Board.PLAYER_TWO, 1), greaterThan(0));
+    assertThat(board.getSeedCount(Player.PLAYER_ONE, 1), greaterThan(0));
+    assertThat(board.getSeedCount(Player.PLAYER_TWO, 1), greaterThan(0));
     
     assertThat(board.isGameOver(), equalTo(false));
   }

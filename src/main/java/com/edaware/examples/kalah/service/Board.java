@@ -5,22 +5,23 @@ import org.slf4j.LoggerFactory;
 
 public class Board {
   private static final Logger log = LoggerFactory.getLogger(Board.class);
+
+  public enum Player {
+    PLAYER_ONE,
+    PLAYER_TWO
+  }
   
   private static final int DEFAULT_HOUSES = 6;
   
   private static final int DEFAULT_SEEDS = 4;
 
-  // XXX: convert to enum
-  public static final int PLAYER_ONE = 0;
-  public static final int PLAYER_TWO = 1;
-  
   private final int houses;
   
   private final int initialSeeds;
   
   private int[] board;
   
-  private int currentPlayer = PLAYER_ONE;
+  private Player current = Player.PLAYER_ONE;
   
   public Board() {
     this(DEFAULT_HOUSES);
@@ -82,16 +83,16 @@ public class Board {
    *    
    * @return the number of seeds in the requested pit
    */
-  public int getSeedCount(int player, int house) {
+  public int getSeedCount(Player player, int house) {
     return board[getArrayIndex(player, house)];
   }
 
-  public int getCurrentPlayer() {
-    return currentPlayer;
+  public Player getCurrentPlayer() {
+    return current;
   }
   
-  public void makeMove(int player, int house) {
-    if (player != currentPlayer)
+  public void makeMove(Player player, int house) {
+    if (player != current)
       return;
    
     int pickedSeeds = getSeedCount(player, house);
@@ -107,25 +108,26 @@ public class Board {
     switchPlayer();
   }
   
-  private void addSeed(int player, int house) {
+  private void addSeed(Player player, int house) {
     int currentSeeds = getSeedCount(player, house);
     setSeedCount(player, house, currentSeeds + 1);
   }
   
   private void switchPlayer() {
-    currentPlayer =
-        currentPlayer == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE;
+    current = 
+        current == Player.PLAYER_ONE ? 
+            Player.PLAYER_TWO : Player.PLAYER_ONE;
   }
   
   /**
    * Set the number of seeds in one house. 
    * Made protected for for Unit Tests
    */
-  protected void setSeedCount(int player, int house, int seeds) {
+  protected void setSeedCount(Player player, int house, int seeds) {
     board[getArrayIndex(player, house)] = seeds;
   }
   
-  public int getStoreCount(int playerOne) {
+  public int getStoreCount(Player player) {
     return 0;
   }
   
@@ -133,18 +135,18 @@ public class Board {
     return false;
   }
 
-  private int getArrayIndex(int player, int house) {
+  private int getArrayIndex(Player player, int house) {
     if (house < 1 || house > houses)
       throw new IllegalArgumentException("house index is out of range");
     
     return (house - 1) + getOffsetForPlayer(player);
   }
   
-  private int getOffsetForPlayer(int player) {
-    if (player == PLAYER_ONE)
+  private int getOffsetForPlayer(Player player) {
+    if (player == Player.PLAYER_ONE)
       return 0;
     
     // +1 = store for player one
-    return (player * houses + 1);
+    return houses + 1;
   }
 }
