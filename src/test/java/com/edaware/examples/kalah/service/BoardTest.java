@@ -129,6 +129,18 @@ public class BoardTest {
   }
   
   @Test
+  public void makeMove_dontSwitchPlayers_whenLastStoneIsInStore()
+      throws Exception {
+    board.makeMove(Player.FIRST, 2);
+
+    assertThat(board.getSeedCount(Player.FIRST, 2), equalTo(0));
+    assertThat(board.getSeedCount(Player.FIRST, 3), equalTo(SEEDS + 1));
+    assertThat(board.getStoreCount(Player.FIRST), equalTo(1));
+    
+    assertThat(board.getCurrentPlayer(), equalTo(Player.FIRST));
+  }
+  
+  @Test
   public void makeMove_switchesPlayers_whenValidMove() throws Exception {
     assertThat(board.getCurrentPlayer(), equalTo(Player.FIRST));
     

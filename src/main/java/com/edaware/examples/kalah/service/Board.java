@@ -1,11 +1,6 @@
 package com.edaware.examples.kalah.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class Board {
-  private static final Logger log = LoggerFactory.getLogger(Board.class);
-
   public enum Player {
     FIRST,
     SECOND
@@ -68,10 +63,6 @@ public class Board {
 
     for (int i = (houses + 1); i <= (houses * 2); i++)
       board[i] = initialSeeds;
-    
-    if (log.isDebugEnabled())
-      for (int i = 0; i <= (houses * 2); i++)
-        log.debug("board[{}]: {}", i, board[i]);
   }
   
   /**
@@ -84,7 +75,7 @@ public class Board {
    * @return the number of seeds in the requested pit
    */
   public int getSeedCount(Player player, int house) {
-    return board[getArrayIndex(player, house)];
+    return board[getIndexHouse(player, house)];
   }
 
   public Player getCurrentPlayer() {
@@ -102,21 +93,21 @@ public class Board {
 
     setSeedCount(player, house, 0);
 
-    for (int i = 0; i < pickedSeeds; i++)
-      addSeed(player, house + i + 1);
+    int thisHouseIndex = getIndexHouse(player, house);
+    for (int i = 1; i <= pickedSeeds; i++)
+      addSeed(thisHouseIndex + i);
 
-    switchPlayer();
+    if ((thisHouseIndex + pickedSeeds) != getIndexStore(player))
+      switchPlayer();
   }
   
-  private void addSeed(Player player, int house) {
-    int currentSeeds = getSeedCount(player, house);
-    setSeedCount(player, house, currentSeeds + 1);
+  private void addSeed(int arrayIndex) {
+    board[arrayIndex] = board[arrayIndex] + 1;
   }
   
   private void switchPlayer() {
-    current = 
-        current == Player.FIRST ? 
-            Player.SECOND : Player.FIRST;
+    current = current == Player.FIRST ? 
+        Player.SECOND : Player.FIRST;
   }
   
   /**
@@ -124,22 +115,27 @@ public class Board {
    * Made protected for for Unit Tests
    */
   protected void setSeedCount(Player player, int house, int seeds) {
-    board[getArrayIndex(player, house)] = seeds;
+    board[getIndexHouse(player, house)] = seeds;
   }
   
   public int getStoreCount(Player player) {
-    return 0;
+    return board[getIndexStore(player)];
   }
   
   public boolean isGameOver() {
     return false;
   }
 
-  private int getArrayIndex(Player player, int house) {
+  private int getIndexHouse(Player player, int house) {
     if (house < 1 || house > houses)
       throw new IllegalArgumentException("house index is out of range");
     
     return (house - 1) + getOffsetForPlayer(player);
+  }
+  
+  private int getIndexStore(Player player) {
+    return player == Player.FIRST ?
+        houses : (houses * 2) + 1;
   }
   
   private int getOffsetForPlayer(Player player) {
