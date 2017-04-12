@@ -93,8 +93,23 @@ public class Board {
   public void makeMove(int player, int house) {
     if (player != currentPlayer)
       return;
-    
+   
+    int pickedSeeds = getSeedCount(player, house);
+        
+    if (pickedSeeds == 0)
+      return;
+
+    setSeedCount(player, house, 0);
+
+    for (int i = 0; i < pickedSeeds; i++)
+      addSeed(player, house + i + 1);
+
     switchPlayer();
+  }
+  
+  private void addSeed(int player, int house) {
+    int currentSeeds = getSeedCount(player, house);
+    setSeedCount(player, house, currentSeeds + 1);
   }
   
   private void switchPlayer() {
@@ -103,7 +118,8 @@ public class Board {
   }
   
   /**
-   * Set the number of seeds in one house. Used only for Unit Tests
+   * Set the number of seeds in one house. 
+   * Made protected for for Unit Tests
    */
   protected void setSeedCount(int player, int house, int seeds) {
     board[getArrayIndex(player, house)] = seeds;

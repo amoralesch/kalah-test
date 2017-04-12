@@ -8,7 +8,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 public class BoardTest {
-  private static final int DEFAULT_HOUSES = 2;
+  private static final int DEFAULT_HOUSES = 3;
   
   private static final int DEFAULT_SEEDS = 2;
   
@@ -95,14 +95,37 @@ public class BoardTest {
   
   @Test
   public void makeMove_ignoresMove_whenIsNotPlayerTurn() throws Exception {
-    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
-    
     board.makeMove(Board.PLAYER_TWO, 1);
 
     assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
     assertThat(board.getSeedCount(Board.PLAYER_TWO, 1), greaterThan(0));
   }
 
+  @Test
+  public void makeMove_ignoresMove_whenSelectedHouseIsEmpty() throws Exception {
+    board.setSeedCount(Board.PLAYER_ONE, 1, 0);
+    
+    board.makeMove(Board.PLAYER_ONE, 1);
+
+    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
+  }
+
+  @Test
+  public void makeMove_emptiesSelectedHouse_always() throws Exception {
+    board.makeMove(Board.PLAYER_ONE, 1);
+
+    assertThat(board.getSeedCount(Board.PLAYER_ONE, 1), equalTo(0));
+  }
+  
+  @Test
+  public void makeMove_addsSeedsNextHouses_always() throws Exception {
+    board.makeMove(Board.PLAYER_ONE, 1);
+
+    assertThat(board.getSeedCount(Board.PLAYER_ONE, 1), equalTo(0));
+    assertThat(board.getSeedCount(Board.PLAYER_ONE, 2), equalTo(DEFAULT_SEEDS + 1));
+    assertThat(board.getSeedCount(Board.PLAYER_ONE, 3), equalTo(DEFAULT_SEEDS + 1));
+  }
+  
   @Test
   public void makeMove_switchesPlayers_whenValidMove() throws Exception {
     assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
