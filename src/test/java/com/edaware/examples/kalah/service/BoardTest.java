@@ -1,12 +1,19 @@
 package com.edaware.examples.kalah.service;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 public class BoardTest {
+  private static final int DEFAULT_HOUSES = 2;
+  
+  private static final int DEFAULT_SEEDS = 2;
+  
+  Board board = new Board(DEFAULT_HOUSES, DEFAULT_SEEDS);
+ 
   @Test
   public void constructor_throwsException_whenSizeIsIncorrect()
       throws Exception {
@@ -29,10 +36,10 @@ public class BoardTest {
   public void constructor_createsSixHouseBoardWithFourSeeds_byDefault() 
       throws Exception 
   {
-    Board b = new Board();
+    Board board = new Board();
     
-    assertThat(b.getTotalPits(), equalTo(14));
-    assertThat(b.getInitialSeeds(), equalTo(4));
+    assertThat(board.getTotalPits(), equalTo(14));
+    assertThat(board.getInitialSeeds(), equalTo(4));
   }
   
   @Test
@@ -49,5 +56,69 @@ public class BoardTest {
 
     assertThat(b.getTotalPits(), equalTo(10));
     assertThat(b.getInitialSeeds(), equalTo(2));
+  }
+  
+  @Test
+  public void constructor_generateCorrectSetup_always() throws Exception {
+    for (int i = 1; i <= DEFAULT_HOUSES; i++)
+      assertThat(board.getSeedCount(Board.PLAYER_ONE, i), equalTo(DEFAULT_SEEDS));
+    
+    for (int i = 1; i <= DEFAULT_HOUSES; i++)
+      assertThat(board.getSeedCount(Board.PLAYER_TWO, i), equalTo(DEFAULT_SEEDS));
+
+    assertThat(board.getStoreCount(Board.PLAYER_ONE), equalTo(0));
+    assertThat(board.getStoreCount(Board.PLAYER_TWO), equalTo(0));
+  }
+  
+  @Test
+  public void getSeedCount_throwsException_whenIndexIsWrong()
+      throws Exception {
+    try {
+      board.getSeedCount(Board.PLAYER_ONE, DEFAULT_HOUSES + 1);
+      fail("IllegalArgumentException expected");
+    } catch (IllegalArgumentException ex) {
+      // success
+    }
+
+    try {
+      board.getSeedCount(Board.PLAYER_TWO, DEFAULT_HOUSES + 1);
+      fail("IllegalArgumentException expected");
+    } catch (IllegalArgumentException ex) {
+      // success
+    }
+  }
+
+  @Test
+  public void getNextPlayer_playerOne_whenStartingGame() throws Exception {
+    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
+  }
+  
+  @Test
+  public void makeMove_ignoresMove_whenIsNotPlayerTurn() throws Exception {
+    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
+    
+    board.makeMove(Board.PLAYER_TWO, 1);
+
+    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
+    assertThat(board.getSeedCount(Board.PLAYER_TWO, 1), greaterThan(0));
+  }
+
+  @Test
+  public void makeMove_switchesPlayers_whenValidMove() throws Exception {
+    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_ONE));
+    
+    board.makeMove(Board.PLAYER_ONE, 1);
+
+    assertThat(board.getCurrentPlayer(), equalTo(Board.PLAYER_TWO));
+  }
+  
+  @Test
+  public void isGameOver_false_whenStonesAreBothPlayersHouses()
+      throws Exception {
+    // some stones are still there
+    assertThat(board.getSeedCount(Board.PLAYER_ONE, 1), greaterThan(0));
+    assertThat(board.getSeedCount(Board.PLAYER_TWO, 1), greaterThan(0));
+    
+    assertThat(board.isGameOver(), equalTo(false));
   }
 }
