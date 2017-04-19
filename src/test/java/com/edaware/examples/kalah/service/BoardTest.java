@@ -150,6 +150,18 @@ public class BoardTest {
   }
   
   @Test
+  public void makeMove_addStonesToEnemy_whenTooMuchStones() throws Exception {
+    board.makeMove(Player.FIRST, 3);
+
+    assertThat(board.getSeedCount(Player.FIRST, 3), equalTo(0));
+    assertThat(board.getStoreCount(Player.FIRST), equalTo(1));
+
+    assertThat(board.getSeedCount(Player.SECOND, 1), equalTo(SEEDS + 1));
+    
+    assertThat(board.getCurrentPlayer(), equalTo(Player.SECOND));
+  }
+  
+  @Test
   public void isGameOver_false_whenStonesAreBothPlayersHouses()
       throws Exception {
     // some stones are still there

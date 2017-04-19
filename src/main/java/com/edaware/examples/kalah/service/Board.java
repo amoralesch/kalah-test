@@ -36,14 +36,6 @@ public class Board {
     initBoard();
   }
   
-  public int getTotalPits() {
-    return board.length;
-  }
-  
-  public int getInitialSeeds() {
-    return initialSeeds;
-  }
-
   /**
    * Creates the board and set the correct amount of seeds in each pit
    */
@@ -58,13 +50,20 @@ public class Board {
     // [houses + 1] to [houses * 2] -> player two houses
     // [houses * 2 + 1] -> player 2 store
     
-    for (int i = 0; i < houses; i++)
+    for (int i = 0; i < houses; i++) {
       board[i] = initialSeeds;
+      board[i + houses + 1] = initialSeeds;
+    }
+  }
 
-    for (int i = (houses + 1); i <= (houses * 2); i++)
-      board[i] = initialSeeds;
+  public int getTotalPits() {
+    return board.length;
   }
   
+  public int getInitialSeeds() {
+    return initialSeeds;
+  }
+
   /**
    * Return the number of seeds in one house
    * 
@@ -83,31 +82,66 @@ public class Board {
   }
   
   public void makeMove(Player player, int house) {
-    if (player != current)
+    if (!isValidMove(player, house))
       return;
    
-    int pickedSeeds = getSeedCount(player, house);
+    int seeds = takeAllSeeds(player, house);
+
+    Player houseOwner = player;
+    int nextHouse = house + 1;
+    while (seeds > 0) {
+      if (nextHouse > houses) {
+        addSeedsStore(houseOwner, 1);
         
-    if (pickedSeeds == 0)
-      return;
-
-    setSeedCount(player, house, 0);
-
-    int thisHouseIndex = getIndexHouse(player, house);
-    for (int i = 1; i <= pickedSeeds; i++)
-      addSeed(thisHouseIndex + i);
-
-    if ((thisHouseIndex + pickedSeeds) != getIndexStore(player))
+        nextHouse = 1;
+        houseOwner = getEnemy(houseOwner);
+      } else {
+        addSeedsPlayer(houseOwner, nextHouse, 1);
+        nextHouse++;
+      }
+      
+      seeds--;
+    }
+    
+    // last seed was stored
+    if (nextHouse != 1)
       switchPlayer();
   }
-  
-  private void addSeed(int arrayIndex) {
-    board[arrayIndex] = board[arrayIndex] + 1;
+
+  private int takeAllSeeds(Player player, int house) {
+    int index = getIndexHouse(player, house);
+    int seeds = board[index];
+    board[index] = 0;
+    return seeds;
   }
   
+  private boolean isValidMove(Player player, int house) {
+    if (player != current)
+      return false;
+   
+    return getSeedCount(player, house) > 0;
+  }
+  
+  private void addSeedsPlayer(Player player, int house, int seeds) {
+    board[getIndexHouse(player, house)] += seeds;
+  }
+
+  /**
+   * Adds some seeds to the player's store pit
+   * 
+   * @param player the player owner of the store
+   * @param seeds the number of seeds to add
+   */
+  private void addSeedsStore(Player player, int seeds) {
+    board[getIndexStore(player)] += seeds;
+  }
+
   private void switchPlayer() {
-    current = current == Player.FIRST ? 
-        Player.SECOND : Player.FIRST;
+    current = getEnemy(current);
+  }
+
+  private Player getEnemy(Player p) {
+    return p == Player.FIRST ? Player.SECOND : Player.FIRST;
   }
   
   /**
