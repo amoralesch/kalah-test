@@ -136,6 +136,9 @@ public class Board {
   }
 
   private boolean isValidMove(Player player, int house) {
+    if (isGameOver())
+      return false;
+
     if (player != current)
       return false;
 
@@ -177,7 +180,21 @@ public class Board {
   }
 
   public boolean isGameOver() {
-    return false;
+    boolean playerOneHasStones = false;
+    boolean playerTwoHasStones = false;
+
+    for (int i = 1; i <= houses; i++) {
+      if (getSeedCount(Player.FIRST, i) > 0)
+        playerOneHasStones = true;
+
+      if (getSeedCount(Player.SECOND, i) > 0)
+        playerTwoHasStones = true;
+
+      if (playerOneHasStones && playerTwoHasStones)
+        return false;
+    }
+
+    return true;
   }
 
   private int getIndexHouse(Player player, int house) {

@@ -112,6 +112,20 @@ public class BoardTest {
   }
 
   @Test
+  public void makeMove_ignoreMove_whenGameAlreadyFinished() throws Exception {
+    for (int i = 1; i <= HOUSES; i++)
+      board.setSeedCount(Player.SECOND, i, 0);
+
+    assertThat(board.isGameOver(), equalTo(true));
+
+    assertThat(board.getSeedCount(Player.FIRST, 1), equalTo(SEEDS));
+    board.makeMove(Player.FIRST, 1);
+
+    assertThat(board.getSeedCount(Player.FIRST, 1), equalTo(SEEDS));
+    assertThat(board.getCurrentPlayer(), equalTo(Player.FIRST));
+  }
+
+  @Test
   public void makeMove_emptiesSelectedHouse_always() throws Exception {
     board.makeMove(Player.FIRST, 1);
 
@@ -222,5 +236,13 @@ public class BoardTest {
     assertThat(board.getSeedCount(Player.SECOND, 1), greaterThan(0));
 
     assertThat(board.isGameOver(), equalTo(false));
+  }
+
+  @Test
+  public void isGameOver_true_whenOwnPitsAreEmpty() throws Exception {
+    for (int i = 1; i <= HOUSES; i++)
+      board.setSeedCount(Player.FIRST, i, 0);
+
+    assertThat(board.isGameOver(), equalTo(true));
   }
 }
