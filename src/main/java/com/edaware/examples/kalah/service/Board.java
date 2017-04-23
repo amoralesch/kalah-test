@@ -136,6 +136,10 @@ public class Board {
       pointsTwo += getSeedCount(Player.SECOND, i);
     }
 
+    // draw
+    if (pointsOne == pointsTwo)
+      return null;
+
     return pointsOne > pointsTwo ? Player.FIRST : Player.SECOND;
   }
 
