@@ -62,11 +62,10 @@ public class BoardTest {
 
   @Test
   public void constructor_generateCorrectSetup_always() throws Exception {
-    for (int i = 1; i <= HOUSES; i++)
+    for (int i = 1; i <= HOUSES; i++) {
       assertThat(board.getSeedCount(Player.FIRST, i), equalTo(SEEDS));
-
-    for (int i = 1; i <= HOUSES; i++)
       assertThat(board.getSeedCount(Player.SECOND, i), equalTo(SEEDS));
+    }
 
     assertThat(board.getStoreCount(Player.FIRST), equalTo(0));
     assertThat(board.getStoreCount(Player.SECOND), equalTo(0));
@@ -183,7 +182,7 @@ public class BoardTest {
   }
 
   @Test
-  public void makeMove_dontSwitchPlayers_whenLastStoneIsInStore()
+  public void makeMove_playerGetSecondMove_whenLastStoneIsInStore()
       throws Exception {
     board.makeMove(Player.FIRST, 2);
 
