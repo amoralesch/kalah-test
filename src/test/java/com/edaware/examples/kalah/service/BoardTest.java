@@ -146,6 +146,43 @@ public class BoardTest {
   }
 
   @Test
+  public void makeMove_stealEnemySeeds_whenLastSeedIsInOwnEmptyHouse()
+      throws Exception {
+    board.setSeedCount(Player.FIRST, HOUSES, 0);
+
+    assertThat(board.getSeedCount(Player.SECOND, 1), equalTo(SEEDS));
+
+    board.makeMove(Player.FIRST, 1);
+
+    assertThat(board.getSeedCount(Player.FIRST, 1), equalTo(0));
+    assertThat(board.getSeedCount(Player.FIRST, 2), equalTo(SEEDS + 1));
+    assertThat(board.getSeedCount(Player.FIRST, 3), equalTo(1));
+
+    assertThat(board.getStoreCount(Player.FIRST), equalTo(SEEDS));
+
+    assertThat(board.getSeedCount(Player.SECOND, 1), equalTo(0));
+  }
+
+  @Test
+  public void makeMove_dontStealOwnSeeds_whenLastSeedIsInEnemyEmptyHouse()
+      throws Exception {
+    board.setSeedCount(Player.FIRST, 2, 3);
+    board.setSeedCount(Player.SECOND, 1, 0);
+
+    assertThat(board.getSeedCount(Player.FIRST, HOUSES), equalTo(SEEDS));
+
+    board.makeMove(Player.FIRST, 2);
+
+    assertThat(board.getSeedCount(Player.FIRST, 2), equalTo(0));
+    assertThat(board.getSeedCount(Player.FIRST, 3), equalTo(SEEDS + 1));
+
+    assertThat(board.getStoreCount(Player.FIRST), equalTo(1));
+
+    assertThat(board.getSeedCount(Player.SECOND, 1), equalTo(1));
+    assertThat(board.getStoreCount(Player.SECOND), equalTo(0));
+  }
+
+  @Test
   public void makeMove_dontSwitchPlayers_whenLastStoneIsInStore()
       throws Exception {
     board.makeMove(Player.FIRST, 2);

@@ -90,6 +90,7 @@ public class Board {
     Player houseOwner = player;
     int nextHouse = house + 1;
     boolean seedInStore = false;
+    boolean stealSeeds = false;
 
     while (seeds > 0) {
       seedInStore = nextHouse > houses;
@@ -103,14 +104,28 @@ public class Board {
         nextHouse = 1;
         houseOwner = getEnemy(houseOwner);
       } else {
+        if (seeds == 1)
+          stealSeeds = (getSeedCount(houseOwner, nextHouse) == 0)
+              && (houseOwner == player);
+
         addSeedsPlayer(houseOwner, nextHouse, 1);
         nextHouse++;
         seeds--;
       }
     }
 
+    if (stealSeeds) {
+      addSeedsStore(player, takeAllSeeds(
+          getEnemy(player),
+          getComplementHouse(nextHouse - 1)));
+    }
+
     if (!seedInStore)
       switchPlayer();
+  }
+
+  private int getComplementHouse(int house) {
+    return (houses + 1) - house;
   }
 
   private int takeAllSeeds(Player player, int house) {
