@@ -38,7 +38,7 @@ public class BoardTest {
   public void constructor_createsSixHouseBoardWithFourSeeds_byDefault()
       throws Exception
   {
-    Board board = new Board();
+    IBoard board = new Board();
 
     assertThat(board.getTotalPits(), equalTo(14));
     assertThat(board.getInitialSeeds(), equalTo(4));
@@ -46,7 +46,7 @@ public class BoardTest {
 
   @Test
   public void constructor_createsNeededPits_always() throws Exception {
-    Board b = new Board(4);
+    IBoard b = new Board(4);
 
     assertThat(b.getTotalPits(), equalTo(10));
     assertThat(b.getInitialSeeds(), equalTo(4));
@@ -54,7 +54,7 @@ public class BoardTest {
 
   @Test
   public void constructor_setInitialSeeds_always() throws Exception {
-    Board b = new Board(4, 2);
+    IBoard b = new Board(4, 2);
 
     assertThat(b.getTotalPits(), equalTo(10));
     assertThat(b.getInitialSeeds(), equalTo(2));

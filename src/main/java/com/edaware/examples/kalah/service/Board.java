@@ -1,6 +1,6 @@
 package com.edaware.examples.kalah.service;
 
-public class Board {
+public class Board implements IBoard {
   public enum Player {
     FIRST,
     SECOND
@@ -56,31 +56,27 @@ public class Board {
     }
   }
 
+  @Override
   public int getTotalPits() {
     return board.length;
   }
 
+  @Override
   public int getInitialSeeds() {
     return initialSeeds;
   }
 
-  /**
-   * Return the number of seeds in one house
-   *
-   * @param player what side of the board to look at
-   * @param house the relative position of the pit to look at;
-   *    starting from 1 and up to the number of houses per player
-   *
-   * @return the number of seeds in the requested pit
-   */
+  @Override
   public int getSeedCount(Player player, int house) {
     return board[getIndexHouse(player, house)];
   }
 
+  @Override
   public Player getCurrentPlayer() {
     return current;
   }
 
+  @Override
   public void makeMove(Player player, int house) {
     if (!isValidMove(player, house))
       return;
@@ -124,6 +120,7 @@ public class Board {
       switchPlayer();
   }
 
+  @Override
   public Player getWinner() {
     if (!isGameOver())
       throw new IllegalStateException("game has not ended");
@@ -138,6 +135,7 @@ public class Board {
     return pointsOne > pointsTwo ? Player.FIRST : Player.SECOND;
   }
 
+  @Override
   public int getScore(Player player) {
     int points = getStoreCount(player);
 
@@ -206,10 +204,12 @@ public class Board {
     board[getIndexStore(player)] = seeds;
   }
 
+  @Override
   public int getStoreCount(Player player) {
     return board[getIndexStore(player)];
   }
 
+  @Override
   public boolean isGameOver() {
     boolean playerOneHasStones = false;
     boolean playerTwoHasStones = false;
