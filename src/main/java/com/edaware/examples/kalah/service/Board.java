@@ -128,7 +128,15 @@ public class Board {
     if (!isGameOver())
       throw new IllegalStateException("game has not ended");
 
-    return null;
+    int pointsOne = getStoreCount(Player.FIRST);
+    int pointsTwo = getStoreCount(Player.SECOND);
+
+    for (int i = 1; i <= houses; i++) {
+      pointsOne += getSeedCount(Player.FIRST, i);
+      pointsTwo += getSeedCount(Player.SECOND, i);
+    }
+
+    return pointsOne > pointsTwo ? Player.FIRST : Player.SECOND;
   }
 
   private int getComplementHouse(int house) {
@@ -176,10 +184,18 @@ public class Board {
 
   /**
    * Set the number of seeds in one house.
-   * Made protected for for Unit Tests
+   * Made protected for Unit Tests
    */
   protected void setSeedCount(Player player, int house, int seeds) {
     board[getIndexHouse(player, house)] = seeds;
+  }
+
+  /**
+   * Set the number of seeds in one store.
+   * Made protected for Unit Tests
+   */
+  protected void setStoreSeeds(Player player, int seeds) {
+    board[getIndexStore(player)] = seeds;
   }
 
   public int getStoreCount(Player player) {

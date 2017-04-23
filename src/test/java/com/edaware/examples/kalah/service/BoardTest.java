@@ -255,4 +255,28 @@ public class BoardTest {
       // success
     }
   }
+
+  @Test
+  public void getWinner_returnPlayerWithMoreSeeds_always() {
+    for (int i = 1; i <= HOUSES; i++) {
+      board.setSeedCount(Player.FIRST, i, 0);
+      board.setSeedCount(Player.SECOND, i, 0);
+    }
+
+    board.setStoreSeeds(Player.FIRST, 1);
+    board.setStoreSeeds(Player.SECOND, 2);
+
+    assertThat(board.getWinner(), equalTo(Player.SECOND));
+  }
+
+  @Test
+  public void getWinner_returnPlayerWithMoreSeeds_includingHouses() {
+    for (int i = 1; i <= HOUSES; i++)
+      board.setSeedCount(Player.FIRST, i, 0);
+
+    board.setStoreSeeds(Player.FIRST, HOUSES * SEEDS + 1);
+    board.setStoreSeeds(Player.SECOND, 2);
+
+    assertThat(board.getWinner(), equalTo(Player.SECOND));
+  }
 }
