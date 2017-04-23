@@ -124,6 +124,13 @@ public class Board {
       switchPlayer();
   }
 
+  public Player getWinner() {
+    if (!isGameOver())
+      throw new IllegalStateException("game has not ended");
+
+    return null;
+  }
+
   private int getComplementHouse(int house) {
     return (houses + 1) - house;
   }

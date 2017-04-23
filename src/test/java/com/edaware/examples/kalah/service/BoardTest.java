@@ -245,4 +245,14 @@ public class BoardTest {
 
     assertThat(board.isGameOver(), equalTo(true));
   }
+
+  @Test
+  public void getWinner_throwsException_whenGameNotOver() throws Exception {
+    try {
+      board.getWinner();
+      fail("IllegalStateException expected");
+    } catch (IllegalStateException ex) {
+      // success
+    }
+  }
 }
