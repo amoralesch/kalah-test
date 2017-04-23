@@ -89,25 +89,27 @@ public class Board {
 
     Player houseOwner = player;
     int nextHouse = house + 1;
+    boolean seedInStore = false;
+
     while (seeds > 0) {
-      if (nextHouse > houses) {
-        if (houseOwner == player)
+      seedInStore = nextHouse > houses;
+
+      if (seedInStore) {
+        if (houseOwner == player) {
           addSeedsStore(houseOwner, 1);
-        else
-          seeds++;
+          seeds--;
+        }
 
         nextHouse = 1;
         houseOwner = getEnemy(houseOwner);
       } else {
         addSeedsPlayer(houseOwner, nextHouse, 1);
         nextHouse++;
+        seeds--;
       }
-
-      seeds--;
     }
 
-    // last seed was stored
-    if (nextHouse != 1)
+    if (!seedInStore)
       switchPlayer();
   }
 
