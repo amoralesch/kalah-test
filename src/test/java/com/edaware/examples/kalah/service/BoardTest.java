@@ -292,4 +292,64 @@ public class BoardTest {
 
     assertThat(board.getWinner(), equalTo(null));
   }
+
+  @Test
+  public void getScore_returnSeedsInHouseAndStore_always() throws Exception {
+    // initial setup
+    assertThat(board.getScore(Player.FIRST), equalTo(HOUSES * SEEDS));
+
+    // after some moces ...
+    board.setStoreSeeds(Player.SECOND, 5);
+    board.setSeedCount(Player.SECOND, 1, 0);
+
+    assertThat(board.getScore(Player.SECOND), equalTo((HOUSES - 1) * SEEDS + 5));
+  }
+
+  @Test
+  public void exampleGame_playsCorrect_always() {
+    board = new Board(6, 3);
+
+    board.makeMove(Player.FIRST, 4);
+    board.makeMove(Player.FIRST, 6);
+    board.makeMove(Player.SECOND, 4);
+    board.makeMove(Player.SECOND, 3);
+    board.makeMove(Player.SECOND, 1);
+    board.makeMove(Player.FIRST, 1);
+    board.makeMove(Player.SECOND, 2);
+    board.makeMove(Player.SECOND, 5);
+    board.makeMove(Player.FIRST, 2);
+    board.makeMove(Player.FIRST, 3);
+    board.makeMove(Player.SECOND, 4);
+    board.makeMove(Player.SECOND, 6);
+    board.makeMove(Player.FIRST, 5);
+    board.makeMove(Player.SECOND, 6);
+    board.makeMove(Player.SECOND, 5);
+    board.makeMove(Player.SECOND, 6);
+    board.makeMove(Player.SECOND, 4);
+    board.makeMove(Player.FIRST, 4);
+    board.makeMove(Player.SECOND, 5);
+    board.makeMove(Player.FIRST, 3);
+    board.makeMove(Player.SECOND, 6);
+    board.makeMove(Player.SECOND, 1);
+    board.makeMove(Player.FIRST, 6);
+    board.makeMove(Player.SECOND, 2);
+    board.makeMove(Player.SECOND, 4);
+    board.makeMove(Player.SECOND, 1);
+    board.makeMove(Player.FIRST, 4);
+    board.makeMove(Player.SECOND, 6);
+    board.makeMove(Player.FIRST, 1);
+    board.makeMove(Player.SECOND, 3);
+    board.makeMove(Player.FIRST, 2);
+    board.makeMove(Player.SECOND, 6);
+    board.makeMove(Player.SECOND, 5);
+    board.makeMove(Player.FIRST, 3);
+    board.makeMove(Player.SECOND, 6);
+
+    assertThat(board.isGameOver(), equalTo(true));
+
+    assertThat(board.getScore(Player.FIRST), equalTo(17));
+    assertThat(board.getScore(Player.SECOND), equalTo(19));
+
+    assertThat(board.getWinner(), equalTo(Player.SECOND));
+  }
 }

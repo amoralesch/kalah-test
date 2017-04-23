@@ -128,19 +128,23 @@ public class Board {
     if (!isGameOver())
       throw new IllegalStateException("game has not ended");
 
-    int pointsOne = getStoreCount(Player.FIRST);
-    int pointsTwo = getStoreCount(Player.SECOND);
-
-    for (int i = 1; i <= houses; i++) {
-      pointsOne += getSeedCount(Player.FIRST, i);
-      pointsTwo += getSeedCount(Player.SECOND, i);
-    }
+    int pointsOne = getScore(Player.FIRST);
+    int pointsTwo = getScore(Player.SECOND);
 
     // draw
     if (pointsOne == pointsTwo)
       return null;
 
     return pointsOne > pointsTwo ? Player.FIRST : Player.SECOND;
+  }
+
+  public int getScore(Player player) {
+    int points = getStoreCount(player);
+
+    for (int i = 1; i <= houses; i++)
+      points += getSeedCount(player, i);
+
+    return points;
   }
 
   private int getComplementHouse(int house) {
