@@ -1,5 +1,8 @@
 package com.edaware.examples.kalah.service;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Board implements IBoard {
   public enum Player {
     FIRST,
@@ -145,6 +148,12 @@ public class Board implements IBoard {
     return points;
   }
 
+  /**
+   * Gets the house number that is in front of this house
+   *
+   * @param house house number to look for
+   * @return number of house in front of this
+   */
   private int getComplementHouse(int house) {
     return (houses + 1) - house;
   }
@@ -170,12 +179,6 @@ public class Board implements IBoard {
     board[getIndexHouse(player, house)] += seeds;
   }
 
-  /**
-   * Adds some seeds to the player's store pit
-   *
-   * @param player the player owner of the store
-   * @param seeds the number of seeds to add
-   */
   private void addSeedsStore(Player player, int seeds) {
     board[getIndexStore(player)] += seeds;
   }
@@ -228,6 +231,14 @@ public class Board implements IBoard {
     return true;
   }
 
+  /**
+   * internally we are using an array to store the board, we use this
+   * method to convert from house number to array index.
+   *
+   * @param player the owner of the house
+   * @param house house number
+   * @return array index of the player's house
+   */
   private int getIndexHouse(Player player, int house) {
     if (house < 1 || house > houses)
       throw new IllegalArgumentException("house index is out of range");
@@ -235,6 +246,13 @@ public class Board implements IBoard {
     return (house - 1) + getOffsetForPlayer(player);
   }
 
+  /**
+   * internally we are using an array to store the board, we use this
+   * method to get the array index for the player's store
+   *
+   * @param player the owner of the store
+   * @return array index
+   */
   private int getIndexStore(Player player) {
     return player == Player.FIRST ?
         houses : (houses * 2) + 1;
